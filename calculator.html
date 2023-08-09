@@ -1,0 +1,595 @@
+<!DOCTYPE html>
+<html lang="en-US">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Wayfinder Calculator</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-4bw+/aepP/YC94hEpVNVgiZdgIC5+VKNBQNGCHeKRQN+PtmoHDEXuppvnDJzQIu9" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-HwwvtgBNo3bZJJLYd8oVXjrBZt8cqVSpeBNS5n7C8IVInixGAoxmnlMuBnhbgrkm"
+    crossorigin="anonymous"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
+    <script src="calculator.js"></script>
+    <link rel="stylesheet" href="styles.css">
+</head>
+
+<body class="container">
+    <header>
+        <h1 class="text-center">Wayfinder Build Calculator</h1>
+        <div>
+            <div class="card bg-danger">
+                <div class="card-body text-center">
+                    <h4>Disclaimer: this application is in developmemet!</h4>
+                    <p>
+                        The values for Wayfinders and weapons is based off of potentially garbage data, they may or may not be
+                        close to the data actually used by the game. For a few weeks after release of Early Access, the data contained in
+                        this application may not be accurate to the game.
+                    </p>
+                    <h4>Data used here may not be true to the game.</h3> 
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <div>
+        <h2>Wayfinder</h2>
+        <div class="row">
+            <div class="col-2">
+                <select id="wayfinder-select" class="form-select" aria-label="Select a Wayfidner" aria-placeholder="Select a Wayfinder"></select>
+            </div>
+            <div class="col-2">
+                <div class="input-group mb-3">
+                    <span class="input-group-text" id="levelLabel">Level</span>
+                    <input id="wayfinder-level" type="number" min="1" max="30" class="form-control" placeholder="Level" 
+                        aria-label="Level" aria-describedby="levelLabel" />
+                </div>
+            </div>
+        </div>
+        <div class="row justify-content-center">
+            <div class="col-md-4">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">Base Stats</h5>
+                        <table class="table" id="wayfinder-base-stats-table">
+                            <thead>
+                                <tr>
+                                    <th>Stat</th>
+                                    <th class="text-end">Base Stat</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-5">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">Internal Stats <span id="at-level-label">@ Level 1</span></h5>
+                        <table class="table" id="wayfinder-internal-stats-table">
+                            <thead>
+                                <tr>
+                                    <th>Budget Modifiers</th>
+                                    <th>Generic Modifiers</th>
+                                    <th class="text-end">Internal Stats</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card ">
+                    <div class="card-body">
+                        <h5 class="card-title">Character Affinities</h5>
+                        <div class="input-group mb-3">
+                            <span class="input-group-text instinct" id="wayfinder-instinct-label">Instinct</span>
+                            <input id="wayfinder-instinct-affinity" type="number" min="0" max="30" class="form-control"
+                                placeholder="Instinct" aria-label="instinct" aria-describedby="wayfinder-instinct-label" />
+                            <span class="input-group-text">%</span>
+                        </div>
+                        <div class="input-group mb-3">
+                            <span class="input-group-text discipline" id="wayfinder-discipline-label">Discipline</span>
+                            <input id="wayfinder-discipline-affinity" type="number" min="0" max="30" class="form-control"
+                                placeholder="Discipline" aria-label="discipline" aria-describedby="wayfinder-discipline-label" />
+                            <span class="input-group-text">%</span>
+                        </div>
+                        <div class="input-group mb-3">
+                            <span class="input-group-text focus" id="wayfinder-focus-label">Focus</span>
+                            <input id="wayfinder-focus-affinity" type="number" min="0" max="30" class="form-control"
+                                placeholder="Focus" aria-label="focus" aria-describedby="wayfinder-focus-label" />
+                            <span class="input-group-text">%</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div>
+        <h2>Weapon</h2>
+        <div class="row">
+            <div class="col-2"><select id="weapon-select" class="form-select" aria-label="Select a Weapon" aria-placeholder="Select a Weapon"></select>
+            </div>
+            <div class="col-2">
+                <div class="input-group mb-3">
+                    <span class="input-group-text" id="levelLabel">Level</span>
+                    <input id="weapon-level" type="number" min="1" max="30" class="form-control" placeholder="Level" 
+                        aria-label="Level" aria-describedby="levelLabel" />
+                </div>
+            </div>
+        </div>
+        <div class="row justify-content-center">
+            <div class="col-md-4">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">Base Stats</h5>
+                        <table class="table" id="weapon-base-stats-table">
+                            <thead>
+                                <tr>
+                                    <th>Stat</th>
+                                    <th class="text-end">Base Stat</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card ">
+                    <div class="card-body">
+                        <h5 class="card-title">Weapon Affinities</h5>
+                        <div class="input-group mb-3">
+                            <span class="input-group-text instinct" id="weapon-instinct-label">Instinct</span>
+                            <input id="weapon-instinct-affinity" type="number" min="0" max="30" class="form-control"
+                                placeholder="Instinct" aria-label="instinct" aria-describedby="weapon-instinct-label" />
+                            <span class="input-group-text">%</span>
+                        </div>
+                        <div class="input-group mb-3">
+                            <span class="input-group-text discipline" id="weapon-discipline-label">Discipline</span>
+                            <input id="weapon-discipline-affinity" type="number" min="0" max="30" class="form-control"
+                                placeholder="Discipline" aria-label="discipline" aria-describedby="weapon-discipline-label" />
+                            <span class="input-group-text">%</span>
+                        </div>
+                        <div class="input-group mb-3">
+                            <span class="input-group-text focus" id="weapon-focus-label">Focus</span>
+                            <input id="weapon-focus-affinity" type="number" min="0" max="30" class="form-control"
+                                placeholder="Focus" aria-label="focus" aria-describedby="weapon-focus-label" />
+                            <span class="input-group-text">%</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-5">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">Internal Stats @ Level 1</h5>
+                        <table class="table" id="weapon-internal-stats-table">
+                            <thead>
+                                <tr>
+                                    <th>Budget Modifiers</th>
+                                    <th>Generic Modifiers</th>
+                                    <th class="text-end">Internal Stats</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>       
+        </div>
+    </div>
+
+    <div>
+        <h2>Accessories</h2>
+        <div class="row">
+            <div id="accessory0" class="col-md-4">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">Accessory 1</h5>
+                    </div>
+                </div>
+            </div>
+            <div id="accessory1" class="col-md-4">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">Accessory 2</h5>
+                    </div>
+                </div>
+            </div>
+            <div id="accessory2" class="col-md-4">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">Accessory 3</h5>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div>
+        <h2>Echoes</h2>
+        <div class="row justify-content-center">
+            <div class="col-md-4">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">Create an Echo</h5>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">List of Echoes Equipped</h5>
+                    </div>
+                </div>
+            </div>       
+        </div>
+    </div>
+
+    <div>
+        <h2>Total</h2>
+        <div class="row justify-content-center">
+            <div class="col-md-4">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">Wayfinder Display Stats</h5>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card ">
+                    <div class="card-body">
+                        <h5 class="card-title">Weapon Display Stats</h5>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">Total Display Stats</h5>
+                    </div>
+                </div>
+            </div>       
+        </div>
+    </div>
+
+    <hr />
+    <div>
+        <h2>Advanced</h2>
+    </div>
+
+    <br />
+    <hr />
+    
+    <footer>
+        <h1 class="text-center">Frequently Asked Questions</h1>
+        <div class="accordion" id="faq-accordian">
+            <div class="accordion-item">
+                <h2 class="accordion-header">
+                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne"
+                        aria-expanded="false" aria-controls="collapseOne">
+                        What is this and how do I use it?
+                    </button>
+                </h2>
+                <div id="collapseOne" class="accordion-collapse collapse" data-bs-parent="#faq-accordian">
+                    <div class="accordion-body">
+                        <strong>This is a tool for calculating character builds in Wayfinder.</strong>
+                        <p>
+                            A build consists of a Wayfinder (character), a weapon, several accessories, and a variety of echoes. These things
+                            contribute to the 9 main stats, displayed to you in the 'Total' section. If you want a clear picture of how the stats
+                            actually work, see “How do stats actually work in this game?”. If you see any values you can't modify, they are either
+                            values that are derived from the rest of the stats, or they're default universal values the game uses. See the instructions
+                            for the advanced stuff below for more details.
+                        </p>
+                        <strong>To get your build started follow these steps:</strong>
+                        <ol>
+                            <li>Select your Wayfinder and the desired level</li>
+                            <li>Base stats should populate, and you should see your internal stats at whatever level you selected.</li>
+                            <li>Input the desired character affinities in percentage. Character affinities only affect weapon and accessory stats.
+                            </li>
+                            <li>Do the same for weapons. This time though, weapon affinities will affect the internal stats of the weapon.</li>
+                            <li>For each accessory you're building for, input the stat and category that accessory will affect, up to 3 for each
+                                accessory, up to 3 accessories.</li>
+                            <li>In the future, we'll have a way to select from existing accessories at the desired level</li>
+                            <li>Power level for accessories is optional, the numbers you enter will be added to the total power level of the build
+                                at the end.</li>
+                            <li>For echoes, you have to manually enter them in. Select the stat the echo will affect, enter in the value, the power
+                                level, and click 'Add Echo'</li>
+                            <li>If you wish to remove an echo from the list, select it in the list and click 'Remove Echo'</li>
+                            <li>In 'Total' you'll see your total combined internal stats and finally your Display Stats, which should be what you
+                                see in-game when you open the Character menu.</li>
+                        </ol>
+                        <strong>Advanced:</strong>
+                        <p>
+                            Use the controls in the 'Advanced' section to be able to manually input multipliers, base stats, and other values that
+                            the game sets be default.
+                        </p>
+                        <ol>
+                            <li>Power Level growth is the rate at which a Wayfinder power budget grows linearly. 18 by default.</li>
+                            <li>Budget modifiers are applied to get internal stats. The same budget modifier is used for every character, this is
+                                essentially the weight stat.</li>
+                            <li>Char modifiers are applied to get internal stats as well, but by default the game sets this to one for every stat. I 
+                                have no clue why this is, but you can use it for whatever, it will multiply your internal stats. Despite the name
+                                char modifiers will still affect weapons.</li>
+                            <li>Display modifiers are what the game multiplies your internal stats by to display to the player.</li>
+                            <li>The base power level is determined by the total of your stats. Every charcter happens to have their stats add up 
+                                to 120.</li>
+                            <li>Use Reset To Default to reset all values to their defaults.</li>
+
+                        </ol>
+                    </div>
+                </div>
+            </div>
+            <div class="accordion-item">
+                <h2 class="accordion-header">
+                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo"
+                    aria-expanded="false" aria-controls="collapseTwo">
+                        How do stats actually work in game?
+                    </button>
+                </h2>
+                <div id="collapseTwo" class="accordion-collapse collapse" data-bs-parent="#faq-accordian">
+                    <div class="accordion-body">
+                        <p>
+                            The game gives a very round-about way of telling you what your stats are, and will change stat
+                            values of items in menus depending on what your build is to make the process 'easier' for
+                            players who are just picking out items from menus. Additionally, your stats aren't actually your
+                            true stats, but actually a combination of your power level and several internal (hidden)
+                            multipliers. This unfortunately makes builds really difficult to plan ahead if you're already
+                            advanced in the game looking at false stats on different items, and hopefully this tool aims to
+                            make things a tad bit easier.
+                        </p>
+                        <p>
+                            Stats start off as what we call <strong>base stats</strong> which never change, and a power
+                            level that grows with your character. A calculation is made with your base stats to determine
+                            how the game distributes your <strong>stat budget</strong> to your character along with a
+                            universal budget multiplier different for each stat in order to create <strong>internal
+                                stats</strong>. These internal stats are probably used for game calculations like damage and
+                            healing, but we don't really know that for sure. Unfortunately, the player doesn't actually see
+                            these stats, because the game uses a final display multiplier to get your <strong>display
+                                stats</strong> and these are the stats you actually see in-game when you open the Character
+                            menu. Confusing? Don't worry, it gets worse. </p>
+                        <p>
+                            Your weapon, accessories, and echoes all contribute stats towards your character, in addition to
+                            your character's display stats, the combination of which is what is <strong>actually</strong>
+                            displayed when you open the Character menu. And just like characters, all items that give stats
+                            in the game go through the same process as a character to determine its stats, with minor
+                            variations. </p>
+                        <p>
+                            Weapons are pretty much exactly like characters, except for tempering. While leveling up a
+                            weapon or a character increases its power level increases, and therefore its stat budget grows
+                            bigger. Unlike characters weapons can be tempered every 5 levels, each tempering increasing the
+                            power level ever so slightly. Weapon stats are affected by your affinities (see affinities). The
+                            weapon's power level is combined with your own when determining power level to display to the
+                            player, however that power level combination doesn't affect your character's actual stats.
+                        </p>
+
+                        <p>
+                            Accessories are found at a static power level, that is determined by the conditions you were in
+                            when you found it. If you're in a low power level dungeon you might find a low power level
+                            accessory. If you run that same dungeon at a higher tier of difficulty, you might find the same
+                            accessory but at a higher power level. Additionally, accessories are affected by your
+                            character's affinities but not your weapon affinities (again, see affinities). The power level
+                            increase for weapons also works the same way for accessories.
+                        </p>
+                        <p>
+                            Echoes are small stat boosts (or special effects in the case of E-type echoes) that you can
+                            equip to characters, weapons, and accessories in the echoes tab. Slotting in an echoes costs
+                            points, which are halved if the slot letter matches the type of the echo you want to slot in.
+                            echoes are not affected by affinities. [Research needs to be done if echoes are affected by
+                            affinities when attached to the same stat boost as an affinity increased category.]
+                        </p>
+                        <p>
+                            <strong>TL;DR:</strong> Stats start as base stats, become internal stats, and are displayed as
+                            display stats. It's complicated.
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <div class="accordion-item">
+                <h2 class="accordion-header">
+                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                        data-bs-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
+                        How does the Affinities tab work?
+                    </button>
+                </h2>
+                <div id="collapseThree" class="accordion-collapse collapse" data-bs-parent="#faq-accordian">
+                    <div class="accordion-body">
+                        <p><strong>Affinitieez nutz.</strong></p>
+                        <p>
+                            Affinities are a percentage increase to weapons and accessories. There are three categories for
+                            affinities, <em class="instinct">instinct</em>, <em class="discipline">discipline</em>, and <em
+                                class="focus">focus</em>. Your weapon and accessories all have stats that belong to one of
+                            the three categories, and it's different for every item in the game. Weapons usually have 6
+                            stats, 2 for each category. The Affinities tab is separated into Character Affinities at the top
+                            and Weapon Affinities at the bottom.
+                        </p>
+                        <p>
+                            Character affinities allow you to spend resources in a category to get affinity in that
+                            category. To put it simply, if you have 15% affinity in <em class="instinct">instinct</em>, all of
+                            your <em class="instinct">instinct</em> stats on your weapons and accessories get 15% better.
+                            Additionally, 5% in a single category gives an affinity perk, unique to each character.
+                        </p>
+                        <p>
+                            Weapon affinities are the same as character affinities, except they only apply to your weapon,
+                            not to your accessory.
+                        </p>
+                        <p>
+                            If you have any character affinities on the character you currently have equipped, the game will
+                            automatically update the stats of weapons and accessories in menus to match what the stats they
+                            would have on that equipped character. For example, let's say character 1 with 0 affinities in
+                            <em class="focus">focus</em> looks at a weapon with 100 Weapon Power in the <em
+                                class="focus">focus</em> category. Character 1 sees the stat for what it really is. If
+                            character 2 with 15% affinity in <em class="focus">focus</em> looks at the same weapon,
+                            they'll see the Weapon Power stat as 115 instead of 100.
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <div class="accordion-item">
+                <h2 class="accordion-header">
+                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                        data-bs-target="#collapseFour" aria-expanded="false" aria-controls="collapseFour">
+                        Why do my stats change when I enter an instance?
+                    </button>
+                </h2>
+                <div id="collapseFour" class="accordion-collapse collapse" data-bs-parent="#faq-accordian">
+                    <div class="accordion-body">
+                        <p>
+                            There's one more factor that changes stats I have yet to mention; instance power ratings aren't
+                            just a recommendation. If your power rating is beyond the current area's power rating, your power
+                            rating is <strong>scaled down</strong> to match the area's power rating + some number, and because
+                            your power rating influences your character's stat budget, your stats are decreased to
+                            compensate. Your power rating will <strong>never scale up</strong> beyond the baseline power
+                            rating your build puts you at. If you're attempting to record statistics or measure your build,
+                            do so in an area that's either above your power rating or in the main hub, otherwise you'll get
+                            different numbers every time.
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <div class="accordion-item">
+                <h2 class="accordion-header">
+                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                        data-bs-target="#collapseFive" aria-expanded="false" aria-controls="collapseFive">
+                        How do critical hits work? How do I center my build around critical hits?
+                    </button>
+                </h2>
+                <div id="collapseFive" class="accordion-collapse collapse" data-bs-parent="#faq-accordian">
+                    <div class="accordion-body">
+                        <p>
+                            Critical hits in this game are not very simple (who would've guessed based on how they treat the
+                            stats). This will be explored further in preparation for a future damage calculator, but if you
+                            want to use this builder to build a character design for crit, here's what you need to know.
+                            Critical hits are determined by the Crit Rating, which represents how likely you are to deal a
+                            critical hit. The percent chance you have to critically hit is a combination of how low level
+                            the enemy is compared to you and how high your Crit Rating is. Essentially, higher Crit Rating
+                            allows you to critically hit more often against higher level enemies.
+                        </p>
+                        <p>
+                            The exact calculation for critical hits is unknown, but for the purposes of a build generally
+                            you can expect to critically hit somewhat often around enemies the same level as you, as long as
+                            you keep focusing on your Crit Rating. At a certain limit, Crit Rating will likely cap out, in
+                            which case it would be better to focus on boosting Crit Power. Once the formula for critical
+                            hits is determined, we can make more assumptions and theorize about the best way to min-max
+                            critical hits.
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <div class="accordion-item">
+                <h2 class="accordion-header">
+                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                        data-bs-target="#collapseEight" aria-expanded="false" aria-controls="collapseEight">
+                        What's the deal with Power Levels?
+                    </button>
+                </h2>
+                <div id="collapseEight" class="accordion-collapse collapse" data-bs-parent="#faq-accordian">
+                    <div class="accordion-body">
+                        <p>
+                            Power Level is this games version of measuring the power of a particular build. The game adds up all the
+                            individual power levels from different parts of your build to get your total power level. However behind
+                            the scenes, a much more complicated process is going on, due to the way the game chooses to display stats
+                            to you... again. The following is somewhat speculative and somewhat based on my experience looking at,
+                            playing, and analyzing this game. A big problem when it comes to power levels is that we're not really
+                            sure how they work for accessories and echoes without further datamining, because we can't record level up
+                            growth for those pieces.
+                        </p>
+                        <p>
+                            Every item in the game (Wayfinders are items in your inventory as well) that can be equipped has a base
+                            power level and a power level growth value. These values never change. When you level up your Wayfinder
+                            or weapon, the game calculates on the fly your item's stats based on your base power level and your leveled 
+                            growth. However, the game still has to give your items a power rating above the base power level to show
+                            that growth to the player, so it also calculates that value. Not only does this make terminology a little bit
+                            confusing, but this gets interesting when we throw external modifiers into our items, the most common being
+                            affinities.
+                        </p>
+                        <p>
+                            When you level up an affinity, the power rating of the weapons and accessories affected by that affinity also goes
+                            up, because those weapons are 'stronger'. Despite the fact that the power rating that's shown to the player increases,
+                            the actual base power level of the item that's used to determine its stats likely remains the same. Is this too 
+                            complicated? Let's throw some more unknown variables into the mix:
+                        </p>
+                        <p>
+                            If you read the section above on why your stats might be changing when you enter an instance, you'd know that
+                            instances with power ratings well below your build's power rating will scale back your power rating, which in turn
+                            scales down your stats to match. How this must work internally is the game likely takes the difference between your
+                            power rating and the target power rating as a percentage, and scales back all of your stats using that percentage as
+                            a straight multiplier. The only other option would be that the game somehow temporarily decreases your base power level 
+                            based on the difference, which would likely put you into the negative base power level range depending on how harsh the
+                            scaling is. The latter option makes me physically revolt thinking about it so I'm going to assume it's not the case, but
+                            yeah we don't actually know quite yet.
+                        </p>
+                        <p>
+                            <strong>TL;DR:</strong> don't be suprised if your power rating in games doesn't match the one from this build tool, 
+                            power levels are weird.
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <div class="accordion-item">
+            <h2 class="accordion-header">
+                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                    data-bs-target="#collapseSix" aria-expanded="false" aria-controls="collapseSix">
+                    Something is wrong/I'm not getting the same result in-game as I am in the calculator?
+                </button>
+            </h2>
+            <div id="collapseSix" class="accordion-collapse collapse" data-bs-parent="#faq-accordian">
+                <div class="accordion-body">
+                    <p>Here may be a small troubleshooting guide for your usage of the build calculator:</p>
+                    <ul>
+                        <li>The game rounds numbers when they're displayed to the player. If you're off by
+                            1 or 2 in a stat, that's probably the reason.</li>
+                        <li>Double check your math; I know it's probably not what you want to hear, but it's really easy
+                            in this game to miss something if you don't follow all the steps and double check your work
+                            because of the way stats are displayed. Make sure you've counted all your Echoes and
+                            affinities.</li>
+                        <li>Any active buffs that affect your stats will also affect them in the Character menu, so be
+                            sure you're clear of all effects.</li>
+                        <li>Make sure your power level isn't being scaled down due to the instance you're in. See 'Why do my stats change 
+                            when I enter an instance?'</li>
+                        <li>Try asking any questions you might have in the official Wayfinder Discord or Reddit. It may
+                            be that you're unsure of how specific stats work, and the people in the community are more
+                            than happy to help.</li>
+                        <li>If you run into a discrepency between the build calculator and the game, and you have some idea as to why,
+                            please contact me, see 'Questions? Concerns? Want to help the cause?' below. If you just want to report that
+                            you're having an issue that's fine too, know that I may not get back to you right away.</li>
+                    </ul>
+                </div>
+            </div>
+            </div>
+            <div class="accordion-item">
+                <h2 class="accordion-header">
+                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                        data-bs-target="#collapseSeven" aria-expanded="false" aria-controls="collapseSeven">
+                        Questions? Concerns? Want to help the cause?
+                    </button>
+                </h2>
+                <div id="collapseSeven" class="accordion-collapse collapse" data-bs-parent="#faq-accordian">
+                    <div class="accordion-body">
+                        <p>
+                            A really <strong>easy way to help</strong> is to go upvote my ticket on the Wayfinder FeatureUpvote board telling the devs
+                            that the Wayfinder community wants to see stats as they really are and tools like this in the game: <a href="google.com"> and 
+                            if I had that link I would put it here</a>
+                        </p>
+                        <p>
+                            Otherwise, if you've got questions, concerns, feedback, or if you're checking out this tool and want to contribute to 
+                            developing the Wayfinder Wiki Project and future tools, feel free to email me: 
+                            <a href="mailto:nitsua234@gmail.com">nitsua234@gmail.com</a>.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
+    <br />
+</body>
+</html>
