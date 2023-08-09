@@ -1,7 +1,7 @@
-const Cateogries = {
-    INSTINCT: 0,
-    DISCIPLINE: 1,
-    FOCUS: 2
+const Categories = {
+    instinct: 0,
+    discipline: 1,
+    focus: 2
 }
 
 const Stats = {
@@ -48,7 +48,7 @@ class Wayfinder {
         this.baseStats = [];
         this.baseStatTotal = 120;
         this.internalStats = [];
-        this.affinties = [];
+        this.affinities = [];
     }
 }
 
@@ -60,7 +60,11 @@ class Weapon {
         this.id = 0;
         this.baseStats = [];
         this.baseStatTotal = 120;
-        this.affinties = [];
+        this.internalStats = [];
+        this.affinities = [];
+        this.perLevelBudgetIncrease = 0;
+        this.perTemperBudgetIncrease = 0;
+        this.perRankBudgetIncrease = 0;
     }
 }
 
@@ -99,12 +103,20 @@ $(document).ready(async function() {
    populateDropdowns();
     
     // attach necessary functions to controls
+    $('#wayfinder-instinct-affinity').change(fullUpdate);
+    $('#wayfinder-discipline-affinity').change(fullUpdate);
+    $('#wayfinder-focus-affinity').change(fullUpdate);
+    $('#weapon-instinct-affinity').change(fullUpdate);
+    $('#weapon-discipline-affinity').change(fullUpdate);
+    $('#weapon-focus-affinity').change(fullUpdate);
 
-    updateWayfinderTable(0);
-    updateWeaponTable(0);
-    updateAccessories();
-    totalStats();
+    fullUpdate();
 });
+
+function fullUpdate() {
+    updateWayfinderTable();
+    updateWeaponTable()
+}
 
 async function loadWayfinderData() {
     var wayfinderData;
@@ -179,7 +191,8 @@ function populateDropdowns() {
     // populate wayfinder dropdown
     var wayfinderSelect = $("#wayfinder-select");
     wayfinderSelect.on('change', function (e) {
-        updateWayfinderTable(this.value);
+        selectedWayfinder = allWayfinders[this.value]
+        fullUpdate();
     });
 
     for (index in allWayfinders) {
@@ -187,11 +200,13 @@ function populateDropdowns() {
         wayfinderSelect.append(`<option value="${wayfinder.id}">${wayfinder.displayName}</option>`)
     }
 
+    selectedWayfinder = allWayfinders[$("#wayfinder-select").val()];
+
     // populate weapon dropdown
     var weaponSelect = $("#weapon-select");
     weaponSelect.on('change', function (e) {
-        console.log(this);
-        updateWeaponTable(this.value);
+        selectedWeapon = allWeapons[this.value];
+        fullUpdate();
     });
 
     for (index in allWeapons) {
@@ -199,11 +214,15 @@ function populateDropdowns() {
         weaponSelect.append(`<option value="${weapon.id}">${weapon.displayName}</option>`)
     }
 
+    selectedWeapon = allWeapons[$("#weapon-select").val()];
     // populate accessory dropdown(s)
 }
 
-function updateWayfinderTable(index) {
-    selectedWayfinder = allWayfinders[index];
+function updateWayfinderTable() {
+    // affinities
+    selectedWayfinder.affinities[0] = $('#wayfinder-instinct-affinity').val() ?? 0;
+    selectedWayfinder.affinities[1] = $('#wayfinder-discipline-affinity').val() ?? 0;
+    selectedWayfinder.affinities[2] = $('#wayfinder-focus-affinity').val() ?? 0;
 
     // base stats
     var baseStatsTable = $('#wayfinder-base-stats-table').children('tbody');
@@ -226,20 +245,24 @@ function updateWayfinderTable(index) {
     var internalStatsTable = $('#wayfinder-internal-stats-table').children('tbody');
     internalStatsTable.empty();    
 
-    var internalStats;
     for (i = 0; i < 9; i++) {
-        internalStats = selectedWayfinder.baseStats[i] * mods.budgetMods[i] * mods.genericMods[i];
+        var internalStat = selectedWayfinder.baseStats[i] * mods.budgetMods[i] * mods.genericMods[i];
+        selectedWayfinder.internalStats[i] = internalStat;
         internalStatsTable.append(`
         <tr>
             <td>x${mods.budgetMods[i]}</td>
             <td>x${mods.genericMods[i]}</td>
-            <td class="text-end">${internalStats.toFixed(3)}</td>
+            <td class="text-end">${internalStat.toFixed(3)}</td>
         </tr>`);
     }
 }
 
-function updateWeaponTable(index) {
-    selectedWeapon = allWeapons[index];
+function updateWeaponTable() {
+    // affinities
+    selectedWeapon.affinities[0] = $('#weapon-instinct-affinity').val() ?? 0;
+    selectedWeapon.affinities[1] = $('#weapon-discipline-affinity').val() ?? 0;
+    selectedWeapon.affinities[2] = $('#weapon-focus-affinity').val() ?? 0;
+
     // base stats
     var baseStatsTable = $('#weapon-base-stats-table').children('tbody');
     baseStatsTable.empty();
@@ -262,36 +285,20 @@ function updateWeaponTable(index) {
     var internalStatsTable = $('#weapon-internal-stats-table').children('tbody');
     internalStatsTable.empty();
 
-    var internalStats;
     for (i = 0; i < selectedWeapon.baseStats.length; i++) {
-        // MORE SHIT NEEDED HERE
         var baseStat = selectedWeapon.baseStats[i];
-        internalStats = baseStat.value * mods.budgetMods[i] * mods.genericMods[i];
+
+        var totalAffinities = (selectedWayfinder.affinities[Categories[baseStat.category]] + selectedWeapon.affinities[Categories[baseStat.category]])/100;
+        var internalStat = baseStat.value * mods.budgetMods[i] * mods.genericMods[i];
+        internalStat += (internalStat * totalAffinities);
+        selectedWeapon.internalStats[i] = internalStat;
         internalStatsTable.append(`
             <tr>
                 <td>x${mods.budgetMods[i]}</td>
                 <td>x${mods.genericMods[i]}</td>
-                <td class="text-end ${baseStat.category}">${internalStats.toFixed(3)}</td>
+                <td class="text-end ${baseStat.category}">${internalStat.toFixed(3)}</td>
             </tr>`);
     }
 }
 
 // update accessories table
-function updateAccessories(tableNumber) {
-    return tableNumber;
-}
-
-// add an echo to the echo list
-function addEcho() {
-
-}
-
-// delete an echo from the echo list
-function removeEcho() {
-
-}
-
-// total up all stats
-function totalStats() {
-
-}
