@@ -17,27 +17,20 @@
 
 <body class="container">
     <header>
-        <h1 class="text-center">Wayfinder Build Calculator</h1>
-        <div>
-            <div class="card bg-danger">
-                <div class="card-body text-center">
-                    <h4>Disclaimer: this application is in developmemet!</h4>
-                    <p>
-                        The values for Wayfinders and weapons is based off of potentially garbage data, they may or may not be
-                        close to the data actually used by the game. For a few weeks after release of Early Access, the data contained in
-                        this application may not be accurate to the game.
-                    </p>
-                    <h4>Data used here may not be true to the game.</h3> 
-                </div>
-            </div>
+        <div class="text-center">
+            <h1>Wayfinder Build Calulator</h1>
+            <p>See the F.A.Q at the bottom.</p>
+
         </div>
     </header>
-
     <div>
         <h2>Wayfinder</h2>
+        <div>
+        </div>
         <div class="row">
             <div class="col-2">
-                <select id="wayfinder-select" class="form-select" aria-label="Select a Wayfidner" aria-placeholder="Select a Wayfinder"></select>
+                <select id="wayfinder-select" class="form-select" aria-label="Select a Wayfinder" 
+                aria-placeholder="Select a Wayfinder"></select>
             </div>
             <div class="col-2">
                 <div class="input-group mb-3">
@@ -46,75 +39,123 @@
                         aria-label="Level" aria-describedby="levelLabel" />
                 </div>
             </div>
-        </div>
-        <div class="row justify-content-center">
-            <div class="col-md-4">
-                <div class="card">
-                    <div class="card-body">
-                        <h5 class="card-title">Base Stats</h5>
-                        <table class="table" id="wayfinder-base-stats-table">
-                            <thead>
-                                <tr>
-                                    <th>Stat</th>
-                                    <th class="text-end">Base Stat</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                            </tbody>
-                        </table>
-                    </div>
+            <div class="col-3">
+                <div class="input-group mb-3">
+                    <span class="input-group-text" id="awakenLabel">Awakening</span>
+                    <input id="wayfinder-awakening" type="number" min="0" max="5" class="form-control" placeholder="Awakening" 
+                        aria-label="Awakening" aria-describedby="awakenLabel" />
                 </div>
             </div>
-            <div class="col-md-5">
-                <div class="card">
-                    <div class="card-body">
-                        <h5 class="card-title">Internal Stats <span id="at-level-label">@ Level 1</span></h5>
-                        <table class="table" id="wayfinder-internal-stats-table">
-                            <thead>
-                                <tr>
-                                    <th>Budget Modifiers</th>
-                                    <th>Generic Modifiers</th>
-                                    <th class="text-end">Internal Stats</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                            </tbody>
-                        </table>
-                    </div>
+            <div class="col-2">
+                <button class="btn btn-primary" type="button" data-bs-toggle="collapse" data-bs-target="#collapseWayfinder"
+                    aria-expanded="false" aria-controls="collapseWayfinder">Help</button>
+            </div>            
+        </div>
+        
+        <div class="collapse" id="collapseWayfinder">
+            <div class="card card-body">
+                <ol>
+                    <li>Select your Wayfinder from the list in the drop down box.</li>
+                    <li>Choose your level (1-30 are valid)</li>
+                    <li>Choose how many times your Wayfinder has awakened</li>
+                    <li>Choose your affinities (located in the Affintiies tab, these effect weapon and accessory stats)</li>
+                </ol>
+                <p>
+                    Your base stats are independent of level. Your internal stats are what the game uses for calculations. Your
+                    display stats are what is displayed to the player. See the FAQ for more details.
+                </p>
+                <p>
+                    <b>Note:</b> you cannot normally see the display stats for your <em>just</em> your Wayfinder in-game, as the in-game
+                    Character menu combines your Wayfinder's stats with other items.
+                </p>
+            </div>
+        </div>
+        
+        <h5>Character Affinities</h5>
+        <div class="row">
+            <div class="col-3">
+                <div class="input-group mb-3">
+                    <span class="input-group-text instinct" id="wayfinder-instinct-label">Instinct</span>
+                    <input id="wayfinder-instinct-affinity" type="number" min="0" max="30" class="form-control"
+                        placeholder="Instinct" aria-label="instinct" aria-describedby="wayfinder-instinct-label" />
+                    <span class="input-group-text">%</span>
+                </div>
+            </div>
+            
+            <div class="col-md-3">
+                <div class="input-group mb-3">
+                    <span class="input-group-text discipline" id="wayfinder-discipline-label">Discipline</span>
+                    <input id="wayfinder-discipline-affinity" type="number" min="0" max="30" class="form-control"
+                        placeholder="Discipline" aria-label="discipline" aria-describedby="wayfinder-discipline-label" />
+                    <span class="input-group-text">%</span>
                 </div>
             </div>
             <div class="col-md-3">
-                <div class="card ">
-                    <div class="card-body">
-                        <h5 class="card-title">Character Affinities</h5>
-                        <div class="input-group mb-3">
-                            <span class="input-group-text instinct" id="wayfinder-instinct-label">Instinct</span>
-                            <input id="wayfinder-instinct-affinity" type="number" min="0" max="30" class="form-control"
-                                placeholder="Instinct" aria-label="instinct" aria-describedby="wayfinder-instinct-label" />
-                            <span class="input-group-text">%</span>
-                        </div>
-                        <div class="input-group mb-3">
-                            <span class="input-group-text discipline" id="wayfinder-discipline-label">Discipline</span>
-                            <input id="wayfinder-discipline-affinity" type="number" min="0" max="30" class="form-control"
-                                placeholder="Discipline" aria-label="discipline" aria-describedby="wayfinder-discipline-label" />
-                            <span class="input-group-text">%</span>
-                        </div>
-                        <div class="input-group mb-3">
-                            <span class="input-group-text focus" id="wayfinder-focus-label">Focus</span>
-                            <input id="wayfinder-focus-affinity" type="number" min="0" max="30" class="form-control"
-                                placeholder="Focus" aria-label="focus" aria-describedby="wayfinder-focus-label" />
-                            <span class="input-group-text">%</span>
-                        </div>
-                    </div>
+                <div class="input-group mb-3">
+                    <span class="input-group-text focus" id="wayfinder-focus-label">Focus</span>
+                    <input id="wayfinder-focus-affinity" type="number" min="0" max="30" class="form-control"
+                        placeholder="Focus" aria-label="focus" aria-describedby="wayfinder-focus-label" />
+                    <span class="input-group-text">%</span>
+                </div>
+            </div>
+        </div>
+        <div class="row justify-content-center">
+            <div class="col-md-3">
+                <div class="card card-body">
+                    <h5 class="card-title">Base Stats</h5>
+                    <table class="table" id="wayfinder-base-stats-table">
+                        <thead>
+                            <tr>
+                                <th>Stats</th>
+                                <th class="text-end">Base Stats</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="col-md-5">
+                <div class="card card-body">
+                    <h5 class="card-title">Internal Stats <span id="wayfinder-at-level-label">@ Level 1</span></h5>
+                    <table class="table" id="wayfinder-internal-stats-table">
+                        <thead>
+                            <tr>
+                                <th>Budget Modifiers</th>
+                                <th>Generic Modifiers</th>
+                                <th class="text-end">Internal Stats</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card card-body">
+                    <h5 class="card-title">Wayfinder Display Stats</h5>
+                    <table class="table" id="wayfinder-display-stats-table">
+                        <thead>
+                            <tr>
+                                <th>Display Modifiers</th>
+                                <th class="text-end">Display Stats</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        </tbody>
+                    </table>
                 </div>
             </div>
         </div>
     </div>
 
+    <br />
+
     <div>
         <h2>Weapon</h2>
         <div class="row">
-            <div class="col-2"><select id="weapon-select" class="form-select" aria-label="Select a Weapon" aria-placeholder="Select a Weapon"></select>
+            <div class="col-2"><select id="weapon-select" class="form-select" aria-label="Select a Weapon" 
+                aria-placeholder="Select a Weapon"></select>
             </div>
             <div class="col-2">
                 <div class="input-group mb-3">
@@ -123,148 +164,254 @@
                         aria-label="Level" aria-describedby="levelLabel" />
                 </div>
             </div>
+            <div class="col-3">
+                <div class="input-group mb-3">
+                    <span class="input-group-text" id="reinforceLabel">Reinforcement</span>
+                    <input id="weapon-reinforcement" type="number" min="0" max="5" class="form-control" placeholder="Reinforcement" 
+                        aria-label="Reinforcement" aria-describedby="reinforceLabel" data-toggle="tooltip"/>
+                </div>
+            </div>
+            <div class="col-2">
+                <div class="input-group mb-3">
+                    <span class="input-group-text" id="temperLabel">Temper</span>
+                    <input id="weapon-temper" type="number" min="0" max="6" class="form-control" placeholder="Temper" aria-label="Temper"
+                        aria-describedby="temperLabel" data-toggle="tooltip" title="You can Temper once per 5 levels" />
+                </div>
+            </div>
+            <div class="col-2">
+                <button class="btn btn-primary" type="button" data-bs-toggle="collapse" data-bs-target="#collapseWeapon"
+                    aria-expanded="false" aria-controls="collapseWeapon">Help</button>
+            </div>
         </div>
-        <div class="row justify-content-center">
-            <div class="col-md-4">
-                <div class="card">
-                    <div class="card-body">
-                        <h5 class="card-title">Base Stats</h5>
-                        <table class="table" id="weapon-base-stats-table">
-                            <thead>
-                                <tr>
-                                    <th>Stat</th>
-                                    <th class="text-end">Base Stat</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                            </tbody>
-                        </table>
-                    </div>
+
+        <div class="collapse" id="collapseWeapon">
+            <div class="card card-body">
+                <ol>
+                    <li>Select your Weapon from the list in the drop down box.</li>
+                    <li>Choose your level (1-30 are valid)</li>
+                    <li>Choose how many times your weapon has been reinforced (available at level 30)</li>
+                    <li>Choose how many times your weapon has been tempered (available every 5 levels)</li>
+                    <li>Choose your weapon affinities (located in the Affintiies tab, these effect <em>only</em> your weapon)</li>
+                </ol>
+                <p>
+                    Your base stats are independent of level. Your internal stats are what the game uses for calculations. Your
+                    display stats are what is displayed to the player. See the FAQ for more details.
+                </p>
+            </div>
+        </div>
+
+        <h5>Weapon Affinities</h5>
+        <div class="row">
+            <div class="col-md-3">
+                <div class="input-group mb-3">
+                    <span class="input-group-text instinct" id="weapon-instinct-label">Instinct</span>
+                    <input id="weapon-instinct-affinity" type="number" min="0" max="30" class="form-control"
+                        placeholder="Instinct" aria-label="instinct" aria-describedby="weapon-instinct-label" />
+                    <span class="input-group-text">%</span>
                 </div>
             </div>
             <div class="col-md-3">
-                <div class="card ">
-                    <div class="card-body">
-                        <h5 class="card-title">Weapon Affinities (Rank?)</h5>
-                        <div class="input-group mb-3">
-                            <span class="input-group-text instinct" id="weapon-instinct-label">Instinct</span>
-                            <input id="weapon-instinct-affinity" type="number" min="0" max="30" class="form-control"
-                                placeholder="Instinct" aria-label="instinct" aria-describedby="weapon-instinct-label" />
-                            <span class="input-group-text">%</span>
-                        </div>
-                        <div class="input-group mb-3">
-                            <span class="input-group-text discipline" id="weapon-discipline-label">Discipline</span>
-                            <input id="weapon-discipline-affinity" type="number" min="0" max="30" class="form-control"
-                                placeholder="Discipline" aria-label="discipline" aria-describedby="weapon-discipline-label" />
-                            <span class="input-group-text">%</span>
-                        </div>
-                        <div class="input-group mb-3">
-                            <span class="input-group-text focus" id="weapon-focus-label">Focus</span>
-                            <input id="weapon-focus-affinity" type="number" min="0" max="30" class="form-control"
-                                placeholder="Focus" aria-label="focus" aria-describedby="weapon-focus-label" />
-                            <span class="input-group-text">%</span>
-                        </div>
-                    </div>
+                <div class="input-group mb-3">
+                    <span class="input-group-text discipline" id="weapon-discipline-label">Discipline</span>
+                    <input id="weapon-discipline-affinity" type="number" min="0" max="30" class="form-control"
+                        placeholder="Discipline" aria-label="discipline" aria-describedby="weapon-discipline-label" />
+                    <span class="input-group-text">%</span>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="input-group mb-3">
+                    <span class="input-group-text focus" id="weapon-focus-label">Focus</span>
+                    <input id="weapon-focus-affinity" type="number" min="0" max="30" class="form-control"
+                        placeholder="Focus" aria-label="focus" aria-describedby="weapon-focus-label" />
+                    <span class="input-group-text">%</span>
+                </div>
+            </div>
+        </div>
+        <div class="row justify-content-center">
+            <div class="col-md-3">
+                <div class="card card-body">
+                    <h5 class="card-title">Base Stats</h5>
+                    <table class="table" id="weapon-base-stats-table">
+                        <thead>
+                            <tr>
+                                <th>Stats</th>
+                                <th class="text-end">Base Stats</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        </tbody>
+                    </table>
                 </div>
             </div>
             <div class="col-md-5">
-                <div class="card">
-                    <div class="card-body">
-                        <h5 class="card-title">Internal Stats @ Level 1</h5>
-                        <table class="table" id="weapon-internal-stats-table">
-                            <thead>
-                                <tr>
-                                    <th>Budget Modifiers</th>
-                                    <th>Generic Modifiers</th>
-                                    <th class="text-end">Internal Stats</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                            </tbody>
-                        </table>
-                    </div>
+                <div class="card card-body">
+                    <h5 class="card-title">Internal Stats <span id="weapon-at-level-label">@ Level 1</span></h5>
+                    <table class="table" id="weapon-internal-stats-table">
+                        <thead>
+                            <tr>
+                                <th>Budget Modifiers</th>
+                                <th>Generic Modifiers</th>
+                                <th class="text-end">Internal Stats</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        </tbody>
+                    </table>
                 </div>
-            </div>       
+            </div>
+            <div class="col-md-4">
+                <div class="card card-body">
+                    <h5 class="card-title">Weapon Display Stats</h5>
+                    <table class="table" id="weapon-display-stats-table">
+                        <thead>
+                            <tr>
+                                <th>Stats</th>
+                                <th class="text-end">Display Stats</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
         </div>
     </div>
+
+    <br />
 
     <div>
         <h2>Accessories</h2>
         <div class="row">
+            <div class="col-3">
+                <button class="btn btn-primary" type="button" data-bs-toggle="collapse" data-bs-target="#collapseAccessory"
+                    aria-expanded="false" aria-controls="collapseAccessory">Help</button>
+            </div>
+        </div>
+        <br />
+        <div class="collapse" id="collapseAccessory">
+            <div class="card card-body">
+                <ol>
+                    <li>Select your accesories from the list in the drop down box.</li>
+                    <li>Choose your level (1-30 are valid).</li>
+                </ol>
+                <p>
+                    Your accessories are only affected by Wayfinder affinities, not weapon affinities. For brevity
+                    base stats and internal stats are not shown, though they do exist internally.
+                </p>
+            </div>
+        </div>
+        <div class="row">
             <div id="accessory0" class="col-md-4">
-                <div class="card">
-                    <div class="card-body">
-                        <h5 class="card-title">Accessory 1</h5>
+                <div class="card card-body">
+                    <h4 class="card-title">Accessory 1</h4>
+                    <div class="row">
+                        <div class="col-7">
+                            <select id="accessory0-select" class="form-select" aria-label="Select an Accessory" 
+                            aria-placeholder="Select an Accessory"></select>
+                        </div>
+                        <div class="col-5">
+                            <div class="input-group mb-3">
+                                <span class="input-group-text" id="levelLabel">Level</span>
+                                <input id="accessory0-level" type="number" min="1" max="30" class="form-control" placeholder="Level" 
+                                    aria-label="Level" aria-describedby="levelLabel" />
+                            </div>
+                        </div>
                     </div>
+                    <h5>Display Stats <span id="accessory0-at-level-label">@ Level 1</span></h5>
+                    <table class="table" id="accessory0-display-stats-table">
+                        <thead>
+                            <tr>
+                                <th>Stats</th>
+                                <th class="text-end">Display Stats</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        </tbody>
+                    </table>
                 </div>
             </div>
             <div id="accessory1" class="col-md-4">
-                <div class="card">
-                    <div class="card-body">
-                        <h5 class="card-title">Accessory 2</h5>
+                <div class="card card-body">
+                    <h4 class="card-title">Accessory 1</h4>
+                    <div class="row">
+                        <div class="col-7">
+                            <select id="accessory1-select" class="form-select" aria-label="Select an Accessory" 
+                            aria-placeholder="Select an Accessory"></select>
+                        </div>
+                        <div class="col-5">
+                            <div class="input-group mb-3">
+                                <span class="input-group-text" id="levelLabel">Level</span>
+                                <input id="accessory1-level" type="number" min="1" max="30" class="form-control" placeholder="Level" 
+                                    aria-label="Level" aria-describedby="levelLabel" />
+                            </div>
+                        </div>
                     </div>
+                    <h5>Display Stats <span id="accessory1-at-level-label">@ Level 1</span></h5>
+                    <table class="table" id="accessory1-display-stats-table">
+                        <thead>
+                            <tr>
+                                <th>Stat</th>
+                                <th class="text-end">Display Stats</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        </tbody>
+                    </table>
                 </div>
             </div>
             <div id="accessory2" class="col-md-4">
-                <div class="card">
-                    <div class="card-body">
-                        <h5 class="card-title">Accessory 3</h5>
+                <div class="card card-body">
+                    <h4 class="card-title">Accessory 1</h4>
+                    <div class="row">
+                        <div class="col-7">
+                            <select id="accessory2-select" class="form-select" aria-label="Select an Accessory" 
+                            aria-placeholder="Select an Accessory"></select>
+                        </div>
+                        <div class="col-5">
+                            <div class="input-group mb-3">
+                                <span class="input-group-text" id="levelLabel">Level</span>
+                                <input id="accessory2-level" type="number" min="1" max="30" class="form-control" placeholder="Level" 
+                                    aria-label="Level" aria-describedby="levelLabel" />
+                            </div>
+                        </div>
                     </div>
+                    <h5>Display Stats <span id="accessory2-at-level-label">@ Level 1</span></h5>
+                    <table class="table" id="accessory2-display-stats-table">
+                        <thead>
+                            <tr>
+                                <th>Stats</th>
+                                <th class="text-end">Display Stats</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        </tbody>
+                    </table>
                 </div>
             </div>
+           
         </div>
     </div>
 
-    <div>
-        <h2>Echoes</h2>
-        <div class="row justify-content-center">
-            <div class="col-md-4">
-                <div class="card">
-                    <div class="card-body">
-                        <h5 class="card-title">Create an Echo</h5>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-4">
-                <div class="card">
-                    <div class="card-body">
-                        <h5 class="card-title">List of Echoes Equipped</h5>
-                    </div>
-                </div>
-            </div>       
-        </div>
-    </div>
+    <br />
 
     <div>
         <h2>Total</h2>
-        <div class="row justify-content-center">
-            <div class="col-md-4">
-                <div class="card">
-                    <div class="card-body">
-                        <h5 class="card-title">Wayfinder Display Stats</h5>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-4">
-                <div class="card ">
-                    <div class="card-body">
-                        <h5 class="card-title">Weapon Display Stats</h5>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-4">
-                <div class="card">
-                    <div class="card-body">
-                        <h5 class="card-title">Total Display Stats</h5>
-                    </div>
-                </div>
-            </div>       
+        <div class="card card-body">
+            <h5 class="card-title">Total Display Stats</h5>
+            <table class="table" id="total-stats-table">
+                <thead>
+                    <tr>
+                        <th>Stat</th>
+                        <th>Wayfinder Stats</th>
+                        <th>Weapon Stats</th>
+                        <th>Other Stat Sources</th>
+                        <th class="text-end">Total Stats</th>
+                    </tr>
+                </thead>
+                <tbody>
+                </tbody>
+            </table>
         </div>
-    </div>
-
-    <hr />
-    <div>
-        <h2>Advanced</h2>
     </div>
 
     <br />
