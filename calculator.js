@@ -16,7 +16,7 @@ const Stats = {
     "Mag Defense": 8
 }
 
-const statLabels = [
+const StatTypes = [
     "Max Health",
     "Resilience",
     "Weapon Power",
@@ -26,15 +26,45 @@ const statLabels = [
     "Break Power",
     "Phys Defense",
     "Mag Defense",
-    "Power"    
+    "Power"
 ]
 
 
 class ModifierGroup {
     constructor() {
-        this.budgetMods = [7.5, 4.5, 1.13, 1.13, 1.13, 1.13, 1.13, 1.88, 1.88];
-        this.genericMods = [1, 1, 1, 1, 1, 1, 1, 1, 1];
-        this.displayMods = [1, 2, 10, 10, 10, 10, 10, 10, 10];
+        this.budgetMods = {
+            "Max Health": 7.5,
+            "Resilience": 4.5,
+            "Weapon Power": 1.125,
+            "Ability Power": 1.125,
+            "Crit Rating": 1.125,
+            "Crit Power": 1.125,
+            "Break Power": 1.125,
+            "Phys Defense": 1.875,
+            "Mag Defense": 1.875
+        };
+        this.genericMods = {
+            "Max Health": 1.0,
+            "Resilience": 1.0,
+            "Weapon Power": 1.0,
+            "Ability Power": 1.0,
+            "Crit Rating": 1.0,
+            "Crit Power": 1.0,
+            "Break Power": 1.0,
+            "Phys Defense": 1.0,
+            "Mag Defense": 1.0
+        };
+        this.displayMods = {
+            "Max Health": 1.0,
+            "Resilience": 2.0,
+            "Weapon Power": 10.0,
+            "Ability Power": 10.0,
+            "Crit Rating": 10.0,
+            "Crit Power": 10.0,
+            "Break Power": 10.0,
+            "Phys Defense": 10.0,
+            "Mag Defense":10.0
+        };
     }
 }
 
@@ -43,14 +73,17 @@ var mods = new ModifierGroup();
 class Wayfinder {
     constructor() {
         this.id = 0;
-        this.displayName = "";
+        this.name = "";
         this.level = 1;
+        this.powerLevel = 120;
         this.awakening = 0;
-        this.baseStats = [];
-        this.internalStats = [];
-        this.displayStats = [];
+        this.baseStats = {};
+        this.internalStats = {};
+        this.displayStats = {};
         this.baseStatTotal = 120;
-        this.affinities = [];
+        this.affinities = {};
+        this.levelIncrease = 0;
+        this.rankIncrease = 0;
     }
 }
 
@@ -60,15 +93,16 @@ var allWayfinders = [];
 class Weapon {
     constructor() {
         this.id = 0;
-        this.displayName = "";
+        this.name = "";
         this.level = 1;
+        this.powerLevel = 0;
         this.reinforcements = 0;
         this.temper = 0;
-        this.baseStats = [];
-        this.internalStats = [];
-        this.displayStats = [];
+        this.baseStats = {};
+        this.internalStats = {};
+        this.displayStats = {};
         this.baseStatTotal = 120;
-        this.affinities = [];
+        this.affinities = {};
         this.perLevelBudgetIncrease = 0;
         this.perTemperBudgetIncrease = 0;
         this.perRankBudgetIncrease = 0;
@@ -81,12 +115,13 @@ var allWeapons = [];
 class Accessory {
     constructor() {
         this.id = 0;
-        this.displayName = "";
+        this.name = "";
         this.level = 1;
-        this.baseStats = [];
+        this.powerLevel;
+        this.baseStats = {};
         this.baseStatTotal = 120;
-        this.internalStats = [];
-        this.displayStats = [];
+        this.internalStats = {};
+        this.displayStats = {};
         this.perLevelBudgetIncrease = 0;
     }
 }
@@ -107,9 +142,12 @@ var echoList = [];
 var beginUpdating = false;
 
 $(document).ready(async function () {
+
     $(function () {
         $('[data-toggle="tooltip"]').tooltip()
     })
+    
+    // grab modifier data    
 
     await loadWayfinderData();
     await loadWeaponData();
@@ -132,27 +170,37 @@ function fullUpdate() {
 
 async function loadWayfinderData() {
     var wayfinderData;
-    await fetch("./json/CharacterInventoryItems.json")
+    await fetch("./json/character_wayfinder.json")
         .then((res) => {
             return res.json();
         })
-        .then((data) => wayfinderData = data[0].Rows);
+        .then((data) => wayfinderData = data);
 
     var numWayfinder = 0;
     for (var wayfinderName in wayfinderData) {
         if (Object.prototype.hasOwnProperty.call(wayfinderData, wayfinderName)) {
-            var statData = wayfinderData[wayfinderName].EquipmentData.AttributeBudgetPoints.Entries;
-            
+            var wayfinder = wayfinderData[wayfinderName];
             var newWayfinder = new Wayfinder();
+
+            // attributes
             newWayfinder.id = numWayfinder;
             numWayfinder++;
-            newWayfinder.displayName = wayfinderData[wayfinderName].DisplayName.Key;
-            var baseStatTotal = 0;
-            for (let i = 0; i < 9; i++) {
-                newWayfinder.baseStats[i] = statData[i].Amount.Value;
-                baseStatTotal += newWayfinder.baseStats[i];
+            newWayfinder.name = wayfinder.name;
+            newWayfinder.levelIncrease = wayfinder.attributeAutoScalingData.PerLevelBudgetIncrement;
+            newWayfinder.rankIncrease = wayfinder.attributeAutoScalingData.PerRankBudgetIncrements;
+
+            // stats
+            var statData = wayfinder.attributes;
+            newWayfinder.baseStatTotal = 0;
+
+            for (var statType in statData) {
+                if (Object.prototype.hasOwnProperty.call(statData, statType)) {
+                    newWayfinder.baseStats[statType] = statData[statType];
+                    newWayfinder.baseStatTotal += newWayfinder.baseStats[statType];
+                }
             }
-            newWayfinder.baseStatTotal = Math.round(baseStatTotal);
+
+            newWayfinder.baseStatTotal = Math.round(newWayfinder.baseStatTotal);
             allWayfinders.push(newWayfinder);
         }
     }
@@ -169,35 +217,36 @@ async function loadWeaponData() {
     var numWeapons = 0;
     for (var weaponName in weaponData) {
         if (Object.prototype.hasOwnProperty.call(weaponData, weaponName)) {
+            var weapon = weaponData[weaponName];
             var newWeapon = new Weapon();
+
+            // attribute
             newWeapon.id = numWeapons;
             numWeapons++;
-            newWeapon.displayName = weaponData[weaponName].name;
-            var attributeScaling = weaponData[weaponName].attributeAutoScalingData;
+            newWeapon.name = weapon.name == "" || weapon.name == null ? weaponName.toString() : weapon.name;
+            var attributeScaling = weapon.attributeAutoScalingData;
             newWeapon.perLevelBudgetIncrease = attributeScaling.PerLevelBudgetIncrement;
             newWeapon.perTemperBudgetIncrease = attributeScaling.PerTemperBudgetIncrements;
             newWeapon.perRankBudgetIncrease = attributeScaling.PerRankBudgetIncrements;
-
+            newWeapon.baseStatTotal = 0;
+            
+            //stats
             var statData = weaponData[weaponName].attributes;
-            var statIndex = 0;
-            var baseStatTotal = 0;
-            for (var statCategory in statData) {
-                if (Object.prototype.hasOwnProperty.call(statData, statCategory)) {
-                    for (var stat in statData[statCategory]) {
-                        if (Object.prototype.hasOwnProperty.call(statData[statCategory], stat)) {
-                            newWeapon.baseStats[statIndex] = {
-                                value: statData[statCategory][stat],
-                                type: stat.toString(),
-                                category: statCategory.toString().toLowerCase()
-                            }
-                            baseStatTotal += newWeapon.baseStats[statIndex].value;
-                            statIndex++;
+            var statAffinities = weaponData[weaponName].affinities;
+            for (var statCategory in statAffinities) {
+                if (Object.prototype.hasOwnProperty.call(statAffinities, statCategory)) {
+                    for (var index in statAffinities[statCategory]) {
+                        var statType = statAffinities[statCategory][index];
+                        newWeapon.baseStats[statType] = {
+                            value: statData[statType],
+                            category: statCategory.toString()
                         }
+
+                        newWeapon.baseStatTotal += newWeapon.baseStats[statType].value;                        
                     }
                 }
             }
 
-            newWeapon.baseStatTotal = Math.round(baseStatTotal);
             allWeapons.push(newWeapon);
         }
     }
@@ -211,38 +260,37 @@ async function loadAccessoryData() {
             return res.json();
         })
         .then((data) => accessoryData = data);
-        
+
     var numAccessories = 0;
     for (var accessoryName in accessoryData) {
         if (Object.prototype.hasOwnProperty.call(accessoryData, accessoryName)) {
+            var accessory = accessoryData[accessoryName];
             var newAccessory = new Accessory();
+
+            // attributes
             newAccessory.id = numAccessories;
             numAccessories++;
-            newAccessory.displayName = accessoryData[accessoryName].name;
-            newAccessory.perLevelBudgetIncrease = accessoryData[accessoryName].attributeAutoScalingData.PerLevelBudgetIncrement;
-
-            var statData = accessoryData[accessoryName].attributes;
-            var statIndex = 0;
-            var baseStatTotal = 0;
-            for (var statCategory in statData) {
-                if (Object.prototype.hasOwnProperty.call(statData, statCategory)) {
-                    for (var stat in statData[statCategory]) {
-                        if (Object.prototype.hasOwnProperty.call(statData[statCategory], stat)) {
-                            newAccessory.baseStats[statIndex] = {
-                                value: statData[statCategory][stat],
-                                type: stat.toString(),
-                                category: statCategory.toString().toLowerCase()
-                            }
-                            baseStatTotal += newAccessory.baseStats[statIndex].value;
-                            statIndex++;
+            newAccessory.name = accessory.name == "" || accessory.name == null ? accessoryName.toString() : accessory.name;
+            newAccessory.perLevelBudgetIncrease = accessory.attributeAutoScalingData.PerLevelBudgetIncrement;
+            newAccessory.baseStatTotal = 0;
+            
+            var statData = accessory.attributes;
+            var statAffinities = accessory.affinities;
+            for (var statCategory in statAffinities) {
+                if (Object.prototype.hasOwnProperty.call(statAffinities, statCategory)) {
+                    for (var index in statAffinities[statCategory]) {
+                        var statType = statAffinities[statCategory][index];
+                        newAccessory.baseStats[statType] = {
+                            value: statData[statType],
+                            category: statCategory.toString()
                         }
+
+                        newAccessory.baseStatTotal += newAccessory.baseStats[statType].value;                        
                     }
                 }
             }
 
-            newAccessory.baseStatTotal = Math.round(baseStatTotal);
             allAccessories.push(newAccessory);
-            
         }
     }
 }
@@ -257,7 +305,7 @@ function populateDropdowns() {
 
     for (index in allWayfinders) {
         var wayfinder = allWayfinders[index];
-        wayfinderSelect.append(`<option value="${wayfinder.id}">${wayfinder.displayName}</option>`)
+        wayfinderSelect.append(`<option value="${wayfinder.id}">${wayfinder.name}</option>`)
     }
 
     selectedWayfinder = allWayfinders[$("#wayfinder-select").val()];
@@ -271,7 +319,7 @@ function populateDropdowns() {
 
     for (index in allWeapons) {
         var weapon = allWeapons[index];
-        weaponSelect.append(`<option value="${weapon.id}">${weapon.displayName}</option>`)
+        weaponSelect.append(`<option value="${weapon.id}">${weapon.name}</option>`)
     }
 
     selectedWeapon = allWeapons[$("#weapon-select").val()];
@@ -284,7 +332,7 @@ function populateDropdowns() {
             switch (this.id) {
                 case "accessory0-select":
                     selectedAccessories[0] = allAccessories[this.value];
-                    break;                
+                    break;
                 case "accessory1-select":
                     selectedAccessories[1] = allAccessories[this.value];
                     break;
@@ -296,16 +344,16 @@ function populateDropdowns() {
             }
             fullUpdate();
         });
-    
+
         for (index in allAccessories) {
             var accessory = allAccessories[index];
             // if (selectedAccessories[(i + 1) % 3].id == index
             //     || selectedAccessories[(i + 2) % 3].id == index) {
             //     continue;
             // }
-            accessorySelect.append(`<option value="${accessory.id}">${accessory.displayName}</option>`)
+            accessorySelect.append(`<option value="${accessory.id}">${accessory.name}</option>`)
         }
-    
+
         selectedAccessories[i] = allAccessories[$("#weapon-select").val()];
     }
 }
@@ -332,153 +380,154 @@ function attachControls() {
 
 function updateWayfinderTables() {
     // attributes
-    selectedWayfinder.level = $('#wayfinder-level').val() === "" ? 1 : $('#wayfinder-level').val();
-    selectedWayfinder.awakening = $('#wayfinder-awakening').val() === "" ? 0 : $('#wayfinder-awakening').val();
+    selectedWayfinder.level = $('#wayfinder-level').val() === "" ? 1 : parseInt($('#wayfinder-level').val());
+    selectedWayfinder.awakening = $('#wayfinder-awakening').val() === "" ? 0 : parseInt($('#wayfinder-awakening').val());
     $('#wayfinder-at-level-label').text(`@ Level ${selectedWayfinder.level}`);
 
     // affinities
-    selectedWayfinder.affinities[0] = $('#wayfinder-instinct-affinity').val() === "" ? 0 : $('#wayfinder-instinct-affinity').val();
-    selectedWayfinder.affinities[1] = $('#wayfinder-discipline-affinity').val() === "" ? 0 : $('#wayfinder-discipline-affinity').val();
-    selectedWayfinder.affinities[2] = $('#wayfinder-focus-affinity').val() === "" ? 0 : $('#wayfinder-focus-affinity').val();
+    selectedWayfinder.affinities["Instinct"] = $('#wayfinder-instinct-affinity').val() === "" ? 0 : parseInt($('#wayfinder-instinct-affinity').val());
+    selectedWayfinder.affinities["Discipline"] = $('#wayfinder-discipline-affinity').val() === "" ? 0 : parseInt($('#wayfinder-discipline-affinity').val());
+    selectedWayfinder.affinities["Focus"] = $('#wayfinder-focus-affinity').val() === "" ? 0 : parseInt($('#wayfinder-focus-affinity').val());
 
-    // base stats
+    selectedWayfinder.powerLevel = selectedWayfinder.baseStatTotal + selectedWayfinder.levelIncrease * (selectedWayfinder.level + selectedWayfinder.awakening - 1);
+
     var baseStatsTable = $('#wayfinder-base-stats-table').children('tbody');
     baseStatsTable.empty();
 
-    for (i = 0; i < 9; i++) {
-        baseStatsTable.append(`
-        <tr>
-            <td>${statLabels[i]}</td>
-            <td class="text-end">${selectedWayfinder.baseStats[i].toFixed(1)}</td>
-        </tr>`);
-    }
-    baseStatsTable.append(`
-        <tr>
-            <td>${statLabels[9]}</td>
-            <td class="text-end">${selectedWayfinder.baseStatTotal}</td>
-        </tr>`);
-
-    // internal stats
     var internalStatsTable = $('#wayfinder-internal-stats-table').children('tbody');
     internalStatsTable.empty();
 
-    var leveledPower = selectedWayfinder.baseStatTotal + (18 * (selectedWayfinder.level + selectedWayfinder.awakening - 1));
-    for (i = 0; i < 9; i++) {
-        var x = selectedWayfinder.baseStats[i] / selectedWayfinder.baseStatTotal;
-        selectedWayfinder.internalStats[i] =  x * leveledPower * mods.budgetMods[i] * mods.genericMods[i];
+    var displayStatsTable = $('#wayfinder-display-stats-table').children('tbody');
+    displayStatsTable.empty();
+
+
+    for (var statType in Stats) {
+        // base stats
+        baseStatsTable.append(`
+            <tr>
+                <td>${statType}</td>
+                <td class="text-end">${selectedWayfinder.baseStats[statType].toFixed(1)}</td>
+            </tr>`);
+
+        // internal stats
+        var ratio = selectedWayfinder.baseStats[statType] / selectedWayfinder.baseStatTotal;
+        selectedWayfinder.internalStats[statType] = ratio * selectedWayfinder.powerLevel * mods.budgetMods[statType] * mods.genericMods[statType];
+
         internalStatsTable.append(`
-        <tr>
-            <td>x${mods.budgetMods[i]}</td>
-            <td>x${mods.genericMods[i]}</td>
-            <td class="text-end">${selectedWayfinder.internalStats[i].toFixed(3)}</td>
-        </tr>`);
+            <tr>
+                <td>x${mods.budgetMods[statType]}</td>
+                <td>x${mods.genericMods[statType]}</td>
+                <td class="text-end">${selectedWayfinder.internalStats[statType].toFixed(3)}</td>
+            </tr>`);
+
+        // display stats
+        selectedWayfinder.displayStats[statType] = Math.round(selectedWayfinder.internalStats[statType] * mods.displayMods[statType]);
+        
+        displayStatsTable.append(`
+            <tr>
+                <td>x${mods.displayMods[statType]}</td>
+                <td class="text-end">${selectedWayfinder.displayStats[statType]}</td>
+            </tr>`);
+
     }
+
+    baseStatsTable.append(`
+        <tr>
+            <td>${StatTypes[9]}</td>
+            <td class="text-end">${selectedWayfinder.baseStatTotal}</td>
+        </tr>`);
+
     internalStatsTable.append(`
         <tr>
             <td></td>
             <td></td>
-            <td class="text-end">${leveledPower}</td>
+            <td class="text-end">${selectedWayfinder.powerLevel.toFixed(3)}</td>
         </tr>`);
-    
-    // display stats
-    var displayStatsTable = $('#wayfinder-display-stats-table').children('tbody');
-    displayStatsTable.empty();
 
-    for (i = 0; i < 9; i++) {
-        selectedWayfinder.displayStats[i] = Math.round(selectedWayfinder.internalStats[i] * mods.displayMods[i]);
-        displayStatsTable.append(`
-            <tr>
-                <td>x${mods.displayMods[i]}</td>
-                <td class="text-end">${selectedWayfinder.displayStats[i]}</td>
-            </tr>`);
-    }
     displayStatsTable.append(`
         <tr>
             <td></td>
-            <td class="text-end">${leveledPower}</td>
+            <td class="text-end">${Math.round(selectedWayfinder.powerLevel)}</td>
         </tr>`);
 
 }
 
 function updateWeaponTables() {
     // attributes
-    selectedWeapon.level = $('#weapon-level').val() === "" ? 1 : $('#weapon-level').val();
-    selectedWeapon.reinforcements = $('#weapon-reinforcement').val() === "" ? 0 : $('#weapon-reinforcement').val();
-    selectedWeapon.temper = $('#weapon-temper').val() === "" ? 0 : $('#weapon-temper').val();
+    selectedWeapon.level = $('#weapon-level').val() === "" ? 1 : parseInt($('#weapon-level').val());
+    selectedWeapon.reinforcements = $('#weapon-reinforcement').val() === "" ? 0 : parseInt($('#weapon-reinforcement').val());
+    selectedWeapon.temper = $('#weapon-temper').val() === "" ? 0 : parseInt($('#weapon-temper').val());
     $('#weapon-at-level-label').text(`@ Level ${selectedWayfinder.level}`);
 
     // affinities
-    selectedWeapon.affinities[0] = $('#weapon-instinct-affinity').val() === "" ? 0 : $('#weapon-instinct-affinity').val();
-    selectedWeapon.affinities[1] = $('#weapon-discipline-affinity').val() === "" ? 0 : $('#weapon-discipline-affinity').val();
-    selectedWeapon.affinities[2] = $('#weapon-focus-affinity').val() === "" ? 0 : $('#weapon-focus-affinity').val();
+    selectedWeapon.affinities["Instinct"] = $('#weapon-instinct-affinity').val() === "" ? 0 : parseInt($('#weapon-instinct-affinity').val());
+    selectedWeapon.affinities["Discipline"] = $('#weapon-discipline-affinity').val() === "" ? 0 : parseInt($('#weapon-discipline-affinity').val());
+    selectedWeapon.affinities["Focus"] = $('#weapon-focus-affinity').val() === "" ? 0 : parseInt($('#weapon-focus-affinity').val());
 
-    // base stats
-    var baseStatsTable = $('#weapon-base-stats-table').children('tbody');
-    baseStatsTable.empty();
-
-    for (i = 0; i < selectedWeapon.baseStats.length; i++) {
-        var baseStat = selectedWeapon.baseStats[i];
-        baseStatsTable.append(`
-            <tr>
-                <td class="${baseStat.category}">${baseStat.type}</td>
-                <td class="text-end">${baseStat.value.toFixed(1)}</td>
-            </tr>`);
-    }
-    baseStatsTable.append(`
-        <tr>
-            <td>${statLabels[9]}</td>
-            <td class="text-end">${selectedWeapon.baseStatTotal}</td>
-        </tr>`);
-
-    // internal stats
-    var internalStatsTable = $('#weapon-internal-stats-table').children('tbody');
-    internalStatsTable.empty();
-
-    var leveledPower = selectedWeapon.baseStatTotal + (selectedWeapon.perLevelBudgetIncrease * (selectedWeapon.level - 1))
+    selectedWeapon.powerLevel = selectedWeapon.baseStatTotal + (selectedWeapon.perLevelBudgetIncrease * (selectedWeapon.level - 1))
         + (selectedWeapon.perTemperBudgetIncrease * (selectedWeapon.temper))
         + (selectedWeapon.perRankBudgetIncrease * (selectedWeapon.reinforcements));
 
-    for (i = 0; i < selectedWeapon.baseStats.length; i++) {
-        var baseStat = selectedWeapon.baseStats[i];
+    var baseStatsTable = $('#weapon-base-stats-table').children('tbody');
+    baseStatsTable.empty();
 
-        var totalAffinities = parseInt(selectedWayfinder.affinities[Categories[baseStat.category]]) + parseInt(selectedWeapon.affinities[Categories[baseStat.category]]);
+    var internalStatsTable = $('#weapon-internal-stats-table').children('tbody');
+    internalStatsTable.empty();
+    
+    var displayStatsTable = $('#weapon-display-stats-table').children('tbody');
+    displayStatsTable.empty();
+    
+    for (statType in selectedWeapon.baseStats) {
+        // base stats
+        var baseStat = selectedWeapon.baseStats[statType];
+        baseStatsTable.append(`
+            <tr>
+                <td class="${baseStat.category.toLowerCase()}">${statType}</td>
+                <td class="text-end">${baseStat.value.toFixed(1)}</td>
+            </tr>`);
+
+        // internal stats
+        var totalAffinities = parseInt(selectedWayfinder.affinities[baseStat.category]) + parseInt(selectedWeapon.affinities[baseStat.category]);
         totalAffinities /= 100;
-        
-        var x = baseStat.value / selectedWeapon.baseStatTotal;       
-        selectedWeapon.internalStats[i] = x * leveledPower * mods.budgetMods[Stats[baseStat.type]] * mods.genericMods[Stats[baseStat.type]];
-        selectedWeapon.internalStats[i] += (selectedWeapon.internalStats[i] * totalAffinities);
+
+        var ratio = baseStat.value / selectedWeapon.baseStatTotal;
+        selectedWeapon.internalStats[statType] = ratio * selectedWeapon.powerLevel * mods.budgetMods[statType] * mods.genericMods[statType];
+        selectedWeapon.internalStats[statType] += (selectedWeapon.internalStats[statType] * totalAffinities);
 
         internalStatsTable.append(`
             <tr>
-                <td>x${mods.budgetMods[Stats[baseStat.type]]}</td>
-                <td>x${mods.genericMods[Stats[baseStat.type]]}</td>
-                <td class="text-end ${baseStat.category}">${selectedWeapon.internalStats[i].toFixed(3)}</td>
+                <td>x${mods.budgetMods[statType]}</td>
+                <td>x${mods.genericMods[statType]}</td>
+                <td class="text-end ${baseStat.category.toLowerCase()}">${selectedWeapon.internalStats[statType].toFixed(3)}</td>
             </tr>`);
+
+        // display stats
+        selectedWeapon.displayStats[statType] = Math.round(selectedWeapon.internalStats[statType] * mods.displayMods[statType]);
+        displayStatsTable.append(`
+            <tr>
+                <td>x${mods.displayMods[statType]}</td>
+                <td class="text-end ${baseStat.category.toLowerCase()}">${(selectedWeapon.displayStats[statType])}</td>
+            </tr>`);
+
     }
+
+    baseStatsTable.append(`
+        <tr>
+            <td>${StatTypes[9]}</td>
+            <td class="text-end">${selectedWeapon.baseStatTotal.toFixed(2)}</td>
+        </tr>`);
+
     internalStatsTable.append(`
         <tr>
             <td></td>
             <td></td>
-            <td class="text-end">${leveledPower}</td>
+            <td class="text-end">${selectedWeapon.powerLevel.toFixed(2)}</td>
         </tr>`);
 
-    // display stats
-    var displayStatsTable = $('#weapon-display-stats-table').children('tbody');
-    displayStatsTable.empty();
-
-    for (i = 0; i < selectedWeapon.baseStats.length; i++) {
-        var baseStat = selectedWeapon.baseStats[i];
-        selectedWeapon.displayStats[i] = Math.round(selectedWeapon.internalStats[i] * mods.displayMods[Stats[baseStat.type]]);
-        displayStatsTable.append(`
-            <tr>
-                <td>x${mods.displayMods[Stats[baseStat.type]]}</td>
-                <td class="text-end ${baseStat.category}">${(selectedWeapon.displayStats[i])}</td>
-            </tr>`);
-    }
     displayStatsTable.append(`
         <tr>
             <td></td>
-            <td class="text-end">${leveledPower}</td>
+            <td class="text-end">${Math.round(selectedWeapon.powerLevel)}</td>
         </tr>`);
 }
 
@@ -488,82 +537,122 @@ function updateAccessoryTables() {
 
         // attributes
         selectedAccessory.level = $(`#accessory${j}-level`).val() === "" ? 1 : $(`#accessory${j}-level`).val();
-    
+
         // display stats
         var displayStatsTable = $(`#accessory${j}-display-stats-table`).children('tbody');
         displayStatsTable.empty();
-    
-        var leveledPower = selectedAccessory.baseStatTotal + (selectedAccessory.perLevelBudgetIncrease * (selectedAccessory.level - 1));
 
-        for (i = 0; i < selectedAccessory.baseStats.length; i++) {
-            var baseStat = selectedAccessory.baseStats[i];
-    
-            var totalAffinities = selectedWayfinder.affinities[Categories[baseStat.category]] / 100;
-            
-            var x = baseStat.value / selectedAccessory.baseStatTotal;
+        selectedAccessory.powerLevel = selectedAccessory.baseStatTotal + (selectedAccessory.perLevelBudgetIncrease * (selectedAccessory.level - 1));
 
-            selectedAccessory.internalStats[i] = x * leveledPower * mods.budgetMods[Stats[baseStat.type]] * mods.genericMods[Stats[baseStat.type]];
-            selectedAccessory.internalStats[i] += (selectedAccessory.internalStats[i] * totalAffinities);
+        for (var statType in selectedAccessory.baseStats) {
+            var baseStat = selectedAccessory.baseStats[statType];
 
-            selectedAccessory.displayStats[i] = Math.round(selectedAccessory.internalStats[i] * mods.displayMods[Stats[baseStat.type]]);
-            
+            var totalAffinities = selectedWayfinder.affinities[baseStat.category] / 100;
+
+            var ratio = baseStat.value / selectedAccessory.baseStatTotal;
+
+            selectedAccessory.internalStats[statType] = ratio * selectedAccessory.powerLevel * mods.budgetMods[statType] * mods.genericMods[statType];
+            selectedAccessory.internalStats[statType] += (selectedAccessory.internalStats[statType] * totalAffinities);
+
+            selectedAccessory.displayStats[statType] = Math.round(selectedAccessory.internalStats[statType] * mods.displayMods[statType]);
+
             displayStatsTable.append(`
                 <tr>
-                    <td class="${baseStat.category}">${baseStat.type}</td>
-                    <td class="text-end">${(selectedAccessory.displayStats[i])}</td>
+                    <td class="${baseStat.category.toLowerCase()}">${statType}</td>
+                    <td class="text-end">${(selectedAccessory.displayStats[statType])}</td>
                 </tr>`);
         }
 
         displayStatsTable.append(`
             <tr>
-                <td>${statLabels[9]}</td>
-                <td class="text-end">${leveledPower}</td>
+                <td>${StatTypes[9]}</td>
+                <td class="text-end">${Math.round(selectedAccessory.powerLevel)}</td>
             </tr>`);
     }
-    
+
 }
 
 function updateTotals() {
     var totalsTable = $(`#total-stats-table`).children('tbody');
-        totalsTable.empty();
+    totalsTable.empty();
 
-    var totalOtherStats = [0, 0, 0, 0, 0, 0, 0, 0, 0];
-    var totalStats = [0, 0, 0, 0, 0, 0, 0, 0, 0];
-    for (i = 0; i < 9; i++) {
-        for (j = 0; j < 3; j++) {
-            for (k in selectedAccessories[j].baseStats) {
-                if (selectedAccessories[j].baseStats[k].type == statLabels[i]) {
-                    totalOtherStats[i] += selectedAccessories[j].displayStats[k];
-                }
-            }
-        }
+    var totalOtherStats = {
+        "Max Health": 0,
+        "Resilience": 0,
+        "Weapon Power": 0,
+        "Ability Power": 0,
+        "Crit Rating": 0,
+        "Crit Power": 0,
+        "Break Power": 0,
+        "Phys Defense": 0,
+        "Mag Defense": 0
+    };
+
+    var totalStats = {
+        "Max Health": 0,
+        "Resilience": 0,
+        "Weapon Power": 0,
+        "Ability Power": 0,
+        "Crit Rating": 0,
+        "Crit Power": 0,
+        "Break Power": 0,
+        "Phys Defense": 0,
+        "Mag Defense": 0
+    };
+
+    // power level
+    var totalPowerLevel = 0;
+    var totalOtherPowerLevel = 0;
+    totalPowerLevel += selectedWayfinder.powerLevel;
+    totalPowerLevel += selectedWeapon.powerLevel;
+    for (j = 0; j < 3; j++) {
+        totalOtherPowerLevel += selectedAccessories[j].powerLevel;
+        totalPowerLevel += selectedAccessories[j].powerLevel;
     }
 
-    for (i = 0; i < 9; i++) {
-        // wayfinder stats
-        var appendString = `<tr><td>${statLabels[i]}</td><td>${selectedWayfinder.displayStats[i]}</td>`
-        totalStats[i] += selectedWayfinder.displayStats[i];
-
-        // weapon stats
-        var appended = false;
-        for (j in selectedWeapon.baseStats) {
-            if (selectedWeapon.baseStats[j].type == statLabels[i]) {
-                appendString += `<td>${selectedWeapon.displayStats[j]}</td>`
-                totalStats[i] += selectedWeapon.displayStats[j];
-                appended = true;
-                break;
+    for (statType in Stats) {
+        // add up accessories stats
+        for (j = 0; j < 3; j++) {
+            if (selectedAccessories[j].displayStats[statType] != null) {
+                console.log(statType + " " + selectedAccessories[j].displayStats[statType]);
+                totalOtherStats[statType] += selectedAccessories[j].displayStats[statType];
             }
         }
-        if (!appended) appendString += "<td>0</td>";
+
+        // wayfinder stats
+        var appendString = `<tr><td>${statType}</td><td>${selectedWayfinder.displayStats[statType]}</td>`
+        totalStats[statType] += selectedWayfinder.displayStats[statType];
+
+        // weapon stats        
+        if (selectedWeapon.baseStats[statType] != null) {
+            appendString += `<td>${selectedWeapon.displayStats[statType]}</td>`
+            totalStats[statType] += selectedWeapon.displayStats[statType];
+        } else  {
+            appendString += "<td>0</td>";
+        }
 
         // other stats
-        appendString += `<td>${totalOtherStats[i]}</td>`;
-        totalStats[i] += totalOtherStats[i];
+        if (totalOtherStats[statType] != null) {
+            appendString += `<td>${totalOtherStats[statType]}</td>`;
+            totalStats[statType] += totalOtherStats[statType];
+        } else {
+            appendString += "<td>0</td>";
+        }
 
         // total stats
-        appendString += `<td class="text-end">${totalStats[i]}</td>`
+        appendString += `<td class="text-end">${totalStats[statType]}</td>`
 
         appendString += "</tr>";
         totalsTable.append(appendString);
     }
+
+    totalsTable.append(`
+    <tr>
+        <td>Power Level</td>
+        <td>${Math.round(selectedWayfinder.powerLevel)}</td>
+        <td>${Math.round(selectedWeapon.powerLevel)}</td>
+        <td>${Math.round(totalOtherPowerLevel)}</td>
+        <td class="text-end">${Math.round(totalPowerLevel)}</td>
+    </tr>
+    `);
 }

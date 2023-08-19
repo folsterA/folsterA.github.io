@@ -1,0 +1,294 @@
+{
+    "TacticianCharacter": {
+        "icon": "UI/UI_WF_Textures/Icons/Characters/WF_Tactician",
+        "name": "Silo",
+        "description": "Uses gadgets and bombs to slow, ignite, or taunt enemies, overcoming his foes with tactics and style. Able to combo his bombs for additional effect. His abilities allow him to stay effective even at range.",
+        "echoSlot": [
+            {"level": 1, "slot": "Balance"},
+            {"level": 1, "slot": "Guard"},
+            {"level": 8, "slot": "Cross"},
+            {"level": 16, "slot": "Rush"},
+            {"level": 24, "slot": "Balance"},
+            {"level": 31, "slot": "Guard"}
+        ],
+        "craftingRecipes": {
+            "Silo's Calling": 1,
+            "Memory of Silo’s Cunning": 1,
+            "Memory of Silo’s Speed": 1,
+            "Memory of Silo’s Precision": 1
+        },
+        "attributes": {
+            "Max Health": 13.2,
+            "Weapon Power": 13.2,
+            "Ability Power": 13.2,
+            "Crit Rating": 16.8,
+            "Crit Power": 18,
+            "Break Power": 12,
+            "Phys Defense": 10.8,
+            "Mag Defense": 10.8,
+            "Resilience": 12
+        },
+        "attributeAutoScalingData": {
+            "PerLevelBudgetIncrement": 18,
+            "PerTemperBudgetIncrements": 0,
+            "PerTenLevelBudgetIncrements": 0,
+            "PerRankBudgetIncrements": 18,
+            "RankBonusPercent": 0
+        }
+    },
+    "BattleMageCharacter": {
+        "icon": "UI/UI_WF_Textures/Icons/Characters/WF_BattleMage",
+        "name": "Kyros",
+        "description": "Dishes out massive damage with his spells. Although he has few defensive tools, Kyros is able to store energy in the form of Arcane Fragments, which he can use to unleash a barrage of Savage Rakes.",
+        "echoSlot": [
+            {"level": 1, "slot": "Attack"},
+            {"level": 1, "slot": "Attack"},
+            {"level": 8, "slot": "Cross"},
+            {"level": 16, "slot": "Rush"},
+            {"level": 24, "slot": "Balance"}
+        ],
+        "craftingRecipes": {
+            "Kyros's Calling": 1,
+            "Memory of Kyros’s Secrets": 1,
+            "Memory of Kyros’s Sight": 1,
+            "Memory of Kyros’s Sorcery": 1
+        },
+        "attributes": {
+            "Max Health": 11,
+            "Weapon Power": 21,
+            "Ability Power": 23,
+            "Crit Rating": 13,
+            "Crit Power": 13,
+            "Break Power": 12,
+            "Phys Defense": 8,
+            "Mag Defense": 8,
+            "Resilience": 11
+        },
+        "attributeAutoScalingData": {
+            "PerLevelBudgetIncrement": 18,
+            "PerTemperBudgetIncrements": 0,
+            "PerTenLevelBudgetIncrements": 0,
+            "PerRankBudgetIncrements": 18,
+            "RankBonusPercent": 0
+        }
+    },
+    "CrusaderCharacter": {
+        "icon": "UI/UI_WF_Textures/Icons/Characters/WF_Crusader",
+        "name": "Wingrave",
+        "description": "The most sturdy of the Wayfinders, able to support and heal his team while smiting foes in melee combat.",
+        "echoSlot": [
+            {"level": 1, "slot": "Guard"},
+            {"level": 1, "slot": "Balance"},
+            {"level": 8, "slot": "Cross"},
+            {"level": 16, "slot": "Rush"},
+            {"level": 24, "slot": "Attack"}
+        ],
+        "craftingRecipes": {
+            "Wingrave's Calling": 1,
+            "Memory of Wingrave’s Courage": 1,
+            "Memory of Wingrave’s Prowess": 1,
+            "Memory of Wingrave’s Faith": 1
+        },
+        "attributes": {
+            "Max Health": 18,
+            "Resilience": 15,
+            "Weapon Power": 10,
+            "Ability Power": 15,
+            "Crit Rating": 5,
+            "Crit Power": 5,
+            "Break Power": 10,
+            "Phys Defense": 24,
+            "Mag Defense": 18
+        },
+        "attributeAutoScalingData": {
+            "PerLevelBudgetIncrement": 18,
+            "PerTemperBudgetIncrements": 0,
+            "PerTenLevelBudgetIncrements": 0,
+            "PerRankBudgetIncrements": 18,
+            "RankBonusPercent": 0
+        }
+    },
+    "VenomessCharacter": {
+        "icon": "UI/UI_WF_Textures/Icons/Characters/WF_Venomess",
+        "name": "Venomess",
+        "description": "Master chemist, using poisons to wear away her foes, and heal over time effects to support her team.",
+        "echoSlot": [
+            {"level": 1, "slot": "Attack"},
+            {"level": 1, "slot": "Guard"},
+            {"level": 8, "slot": "Cross"},
+            {"level": 16, "slot": "Rush"},
+            {"level": 24, "slot": "Attack"}
+        ],
+        "craftingRecipes": {
+            "Venomess's Calling": 1,
+            "Memory of Ven’s Guile": 1,
+            "Memory of Ven’s Venom": 1,
+            "Memory of Ven’s Duty": 1
+        },
+        "attributes": {
+            "Max Health": 12,
+            "Resilience": 12,
+            "Weapon Power": 12,
+            "Ability Power": 20,
+            "Crit Rating": 21,
+            "Crit Power": 14,
+            "Break Power": 5,
+            "Phys Defense": 12,
+            "Mag Defense": 12
+        },
+        "attributeAutoScalingData": {
+            "PerLevelBudgetIncrement": 18,
+            "PerTemperBudgetIncrements": 0,
+            "PerTenLevelBudgetIncrements": 0,
+            "PerRankBudgetIncrements": 18,
+            "RankBonusPercent": 0
+        }
+    },
+    "CrusaderMountCharacter": {
+        "icon": "UI/UI_WF_Textures/Icons/Characters/WF_Crusader",
+        "name": "Wingrave",
+        "description": "The most sturdy of the Wayfinders, able to support and heal his team while smiting foes in melee combat.",
+        "echoSlot": [
+            {"level": 1, "slot": "Guard"},
+            {"level": 1, "slot": "Balance"},
+            {"level": 6, "slot": "Cross"},
+            {"level": 12, "slot": "Attack"},
+            {"level": 18, "slot": "Rush"},
+            {"level": 24, "slot": "Guard"},
+            {"level": 30, "slot": "Attack"},
+            {"level": 31, "slot": "Cross"},
+            {"level": 271, "slot": "Guard"},
+            {"level": 871, "slot": "Rush"}
+        ],
+        "craftingRecipes": null,
+        "attributes": {
+            "Max Health": 19.2,
+            "Weapon Power": 9.6,
+            "Ability Power": 13.2,
+            "Crit Rating": 6,
+            "Crit Power": 6,
+            "Break Power": 14.4,
+            "Phys Defense": 18,
+            "Mag Defense": 18,
+            "Resilience": 15.6
+        },
+        "attributeAutoScalingData": {
+            "PerLevelBudgetIncrement": 18,
+            "PerTemperBudgetIncrements": 0,
+            "PerTenLevelBudgetIncrements": 0,
+            "PerRankBudgetIncrements": 18,
+            "RankBonusPercent": 0
+        }
+    },
+    "NissCharacter": {
+        "icon": "UI/UI_WF_Textures/Icons/Characters/WF_Niss",
+        "name": "Niss",
+        "description": "Elusive master of shadows, manipulating gloom to destroy her foes while darting around the battlefield.",
+        "echoSlot": [
+            {"level": 1, "slot": "Guard"},
+            {"level": 1, "slot": "Balance"},
+            {"level": 8, "slot": "Cross"},
+            {"level": 16, "slot": "Rush"},
+            {"level": 24, "slot": "Balance"},
+            {"level": 31, "slot": "Cross"}
+        ],
+        "craftingRecipes": {
+            "Niss's Calling": 1,
+            "Memory of Niss’s Will": 1,
+            "Memory of Niss’s Shadow": 1,
+            "Memory of Niss’s Steel": 1
+        },
+        "attributes": {
+            "Max Health": 12,
+            "Weapon Power": 16,
+            "Ability Power": 24,
+            "Crit Rating": 18,
+            "Crit Power": 18,
+            "Break Power": 6,
+            "Phys Defense": 7,
+            "Mag Defense": 8,
+            "Resilience": 11
+        },
+        "attributeAutoScalingData": {
+            "PerLevelBudgetIncrement": 18,
+            "PerTemperBudgetIncrements": 0,
+            "PerTenLevelBudgetIncrements": 0,
+            "PerRankBudgetIncrements": 18,
+            "RankBonusPercent": 0
+        }
+    },
+    "GladiatorCharacter": {
+        "icon": "UI/UI_WF_Textures/Icons/Characters/WF_Senja",
+        "name": "Senja",
+        "description": "Senja loves to put on a show and gains power as the crowd in her mind reacts to her battles. She delights in close combat, and can stagger foes with a mighty pummel and keep the attention of the enemies on her as she shrugs off their blows.",
+        "echoSlot": [
+            {"level": 1, "slot": "Balance"},
+            {"level": 1, "slot": "Attack"},
+            {"level": 8, "slot": "Cross"},
+            {"level": 16, "slot": "Rush"},
+            {"level": 24, "slot": "Guard"},
+            {"level": 31, "slot": "Cross"}
+        ],
+        "craftingRecipes": {
+            "Senja's Calling": 1,
+            "Memory of Senja’s Might": 1,
+            "Memory of Senja’s Glory": 1,
+            "Memory of Senja’s Storm": 1
+        },
+        "attributes": {
+            "Max Health": 20,
+            "Resilience": 15,
+            "Weapon Power": 17,
+            "Ability Power": 13,
+            "Crit Rating": 7,
+            "Crit Power": 10,
+            "Break Power": 10,
+            "Phys Defense": 18,
+            "Mag Defense": 10
+        },
+        "attributeAutoScalingData": {
+            "PerLevelBudgetIncrement": 18,
+            "PerTemperBudgetIncrements": 0,
+            "PerTenLevelBudgetIncrements": 0,
+            "PerRankBudgetIncrements": 18,
+            "RankBonusPercent": 0
+        }
+    },
+    "HeroicBattleMageCharacter": {
+        "icon": "UI/UI_WF_Textures/Icons/Characters/WF_HeroicKyros",
+        "name": "Heroic Kyros",
+        "description": "Dishes out massive damage with his spells. Although he has few defensive tools, Kyros is able to store energy in the form of Arcane Fragments, which he can use to unleash a barrage of Savage Rakes.",
+        "echoSlot": [
+            {"level": 1, "slot": "Attack"},
+            {"level": 1, "slot": "Attack"},
+            {"level": 1, "slot": "Rush"},
+            {"level": 8, "slot": "Cross"},
+            {"level": 16, "slot": "Balance"},
+            {"level": 24, "slot": "Balance"}
+        ],
+        "craftingRecipes": {
+            "Kyros's Calling": 1,
+            "Memory of Kyros’s Secrets": 1,
+            "Memory of Kyros’s Sight": 1,
+            "Memory of Kyros’s Sorcery": 1
+        },
+        "attributes": {
+            "Max Health": 11,
+            "Weapon Power": 23,
+            "Ability Power": 27,
+            "Crit Rating": 13,
+            "Crit Power": 13,
+            "Break Power": 12,
+            "Phys Defense": 8,
+            "Mag Defense": 8,
+            "Resilience": 11
+        },
+        "attributeAutoScalingData": {
+            "PerLevelBudgetIncrement": 18,
+            "PerTemperBudgetIncrements": 0,
+            "PerTenLevelBudgetIncrements": 0,
+            "PerRankBudgetIncrements": 18,
+            "RankBonusPercent": 0
+        }
+    }
+}

@@ -9,3 +9,7 @@
 .focus {
     color: purple !important
 }
+
+.danger {
+    color: red !important;
+}
